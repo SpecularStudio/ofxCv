@@ -40,7 +40,7 @@ namespace ofxCv {
         if(!tex.isAllocated()) {
             return CV_8U;
         }
-        int type = tex.getTextureData().glTypeInternal;
+        int type = tex.getTextureData().glInternalFormat;
         switch(type) {
             case GL_RGBA:
             case GL_RGB:
@@ -77,7 +77,7 @@ namespace ofxCv {
 		return CV_8S;
 	}
 	template <class T> inline int getDepth(ofBaseHasPixels_<T>& img) {
-		return getDepth(img.getPixelsRef());
+		return getDepth(img.getPixels());
 	}
 	
 	// channels
@@ -99,7 +99,7 @@ namespace ofxCv {
         if(!tex.isAllocated()) {
             return GL_RGB;
         }
-        int type = tex.getTextureData().glTypeInternal;
+        int type = tex.getTextureData().glInternalFormat;
         switch(type) {
             case GL_RGBA: return 4;
             case GL_RGB: return 3;
@@ -123,7 +123,7 @@ namespace ofxCv {
 		return pixels.getNumChannels();
 	}
 	template <class T> inline int getChannels(ofBaseHasPixels_<T>& img) {
-		return getChannels(img.getPixelsRef());
+		return getChannels(img.getPixels());
 	}
 	
 	// image type
@@ -227,7 +227,7 @@ namespace ofxCv {
 		return Mat(pix.getHeight(), pix.getWidth(), getCvImageType(pix), pix.getPixels(), 0);
 	}
 	template <class T> inline Mat toCv(ofBaseHasPixels_<T>& img) {
-		return toCv(img.getPixelsRef());
+		return toCv(img.getPixels());
 	}
 	Mat toCv(ofMesh& mesh);
 	Point2f toCv(ofVec2f vec);
