@@ -47,23 +47,28 @@ namespace ofxCv {
 		return principalPoint;
 	}
     
+    ofMatrix4x4 Intrinsics::getProjectionMatrix(float nearDist, float farDist) const
+    {
+        float w = imageSize.width;
+        float h = imageSize.height;
+        float fx = cameraMatrix.at<double>(0, 0);
+        float fy = cameraMatrix.at<double>(1, 1);
+        float cx = principalPoint.x;
+        float cy = principalPoint.y;
+        
+        ofMatrix4x4 frustum;
+        frustum.makeFrustumMatrix(nearDist * (-cx) / fx, nearDist * (w - cx) / fx,
+                                  nearDist * (cy) / fy, nearDist * (cy - h) / fy,
+                                  nearDist, farDist);
+        return frustum;
+    }
+    
 	void Intrinsics::loadProjectionMatrix(float nearDist, float farDist, cv::Point2d viewportOffset) const {
 		ofViewport(viewportOffset.x, viewportOffset.y, imageSize.width, imageSize.height);
 		ofSetMatrixMode(OF_MATRIX_PROJECTION);
 		ofLoadIdentityMatrix();
-		float w = imageSize.width;
-		float h = imageSize.height;
-		float fx = cameraMatrix.at<double>(0, 0);
-		float fy = cameraMatrix.at<double>(1, 1);
-		float cx = principalPoint.x;
-		float cy = principalPoint.y;
-		
-		ofMatrix4x4 frustum;
-		frustum.makeFrustumMatrix(
-			nearDist * (-cx) / fx, nearDist * (w - cx) / fx,
-			nearDist * (cy) / fy, nearDist * (cy - h) / fy,
-			nearDist, farDist);
-		ofMultMatrix(frustum);
+        
+		ofMultMatrix(getProjectionMatrix(nearDist, farDist));
 
 		ofSetMatrixMode(OF_MATRIX_MODELVIEW);
 		ofLoadIdentityMatrix();
